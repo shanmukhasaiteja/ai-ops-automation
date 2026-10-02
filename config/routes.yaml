@@ -1,0 +1,25 @@
+# Destinations read their URL from environment variables. Anything unset is reported as "unconfigured", never sent.
+destinations:
+  pagerduty:       {format: pagerduty, url: "${PAGERDUTY_URL}",      routing_key: "${PAGERDUTY_ROUTING_KEY}"}
+  slack-incidents: {format: slack,     url: "${SLACK_INCIDENTS_URL}"}
+  slack-triage:    {format: slack,     url: "${SLACK_TRIAGE_URL}"}
+  slack-digest:    {format: slack,     url: "${SLACK_DIGEST_URL}"}
+  tickets:         {format: generic,   url: "${TICKET_WEBHOOK_URL}"}
+
+routes:
+  - name: page-on-call              # P1 always pages, even when the model was unsure
+    when: {severity: [P1]}
+    send: [pagerduty, slack-incidents]
+  - name: urgent-channel
+    when: {severity: [P2]}
+    send: [slack-incidents]
+  - name: security-ticket
+    when: {category: [security]}
+    send: [tickets]
+  - name: human-triage              # anything uncertain also lands in front of a person
+    when: {needs_human: true}
+    send: [slack-triage]
+  - name: low-priority-digest       # P3/P4 are batched, not interrupting
+    when: {severity: [P3, P4], needs_human: false}
+    digest: true
+    send: [slack-digest]

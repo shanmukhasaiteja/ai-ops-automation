@@ -1,0 +1,26 @@
+# Who owns what. Used for routing, tool lookups and policy checks.
+services:
+  checkout:        {team: payments,      tier: 1, runbook: "https://runbooks.example.com/checkout"}
+  auth-api:        {team: security,      tier: 1, runbook: "https://runbooks.example.com/auth"}
+  data-warehouse:  {team: data-platform, tier: 2}
+  orders-ingest:   {team: data-platform, tier: 2}
+  batch-runner:    {team: platform,      tier: 3}
+  web-app:         {team: engineering,   tier: 2}
+
+teams:
+  payments:      {on_call: "payments-oncall@example.com",  channel: "#payments-oncall"}
+  security:      {on_call: "secops-oncall@example.com",    channel: "#security-alerts"}
+  platform:      {on_call: "platform-oncall@example.com",  channel: "#platform"}
+  data-platform: {on_call: "data-oncall@example.com",      channel: "#data-platform"}
+  engineering:   {on_call: "eng-oncall@example.com",       channel: "#engineering"}
+  it-helpdesk:   {on_call: "helpdesk@example.com",         channel: "#it-helpdesk"}
+  finance-ops:   {on_call: "finance-ops@example.com",      channel: "#finance-ops"}
+  triage-desk:   {on_call: "triage@example.com",           channel: "#ops-triage"}
+
+runbooks:
+  infrastructure: "https://runbooks.example.com/infrastructure"
+  security:       "https://runbooks.example.com/security-incident"
+  data_quality:   "https://runbooks.example.com/data-quality"
+  access_request: "https://runbooks.example.com/access-requests"
+  bug:            "https://runbooks.example.com/bug-triage"
+  billing:        "https://runbooks.example.com/billing"
